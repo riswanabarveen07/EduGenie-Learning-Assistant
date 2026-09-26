@@ -825,20 +825,83 @@ async def learn_recommendations(
 
     text = text.strip()
 
-    recommendations = get_learning_recommendations(
-        text
-    )
+    try:
 
-    return render_result(
-        request,
-        "Recommend Path",
-        "Your learning path",
-        text,
-        recommendations,
-        is_quiz=False,
-        source_type="ai",
-    )
+        recommendations = get_learning_recommendations(
+            text
+        )
 
+        return render_result(
+            request,
+            "Recommend Path",
+            "Your learning path",
+            text,
+            recommendations,
+            is_quiz=False,
+            source_type="ai",
+        )
+
+    except GeminiServiceError as exc:
+
+        logger.warning(
+            "Gemini learning path error: %s",
+            exc,
+        )
+
+        return templates.TemplateResponse(
+            request=request,
+            name="result.html",
+            context={
+                "request": request,
+                "title": "Your learning path",
+                "task": "Recommend Path",
+                "source": text,
+                "prompt": text,
+                "content": None,
+                "is_quiz": False,
+                "has_error": True,
+                "error_title": (
+                    "Gemini request limit reached"
+                ),
+                "error_message": (
+                    "The Gemini API request limit has "
+                    "been reached temporarily. Please "
+                    "try this feature again after the "
+                    "quota becomes available."
+                ),
+                "source_type": "ai",
+            },
+            status_code=503,
+        )
+
+    except Exception as exc:
+
+        logger.exception(
+            "Unexpected learning path error: %s",
+            exc,
+        )
+
+        return templates.TemplateResponse(
+            request=request,
+            name="result.html",
+            context={
+                "request": request,
+                "title": "Your learning path",
+                "task": "Recommend Path",
+                "source": text,
+                "prompt": text,
+                "content": None,
+                "is_quiz": False,
+                "has_error": True,
+                "error_title": "Something went wrong",
+                "error_message": (
+                    "EduGenie could not generate your "
+                    "learning path right now."
+                ),
+                "source_type": "ai",
+            },
+            status_code=500,
+        )
 
 # =========================================
 # HEALTH CHECK

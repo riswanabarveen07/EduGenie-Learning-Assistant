@@ -1,0 +1,1140 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+
+    {% if task == "QnA" or task == "qa" %}
+        EduGenie | Answer
+
+    {% elif task == "Quiz" or task == "quiz" %}
+        EduGenie | Quiz
+
+    {% elif task == "Summary" or task == "summarize" %}
+        EduGenie | Summary
+
+    {% elif task == "Recommend Path" or task == "learn" %}
+        EduGenie | Learning Path
+
+    {% else %}
+        EduGenie | Explanation
+    {% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="result-page">
+
+    <!-- =========================================
+         BACK TO WORKSPACE
+         ========================================= -->
+
+    <a
+        href="/"
+        class="result-back"
+    >
+        <span>←</span>
+        Back to Workspace
+    </a>
+
+
+    <!-- =========================================
+         RESULT HERO
+         ========================================= -->
+
+    <section class="result-hero">
+
+        <div class="result-badge">
+            <span class="result-badge-dot"></span>
+            AI POWERED
+        </div>
+
+        {% if task == "QnA" or task == "qa" %}
+
+            <h1>
+                Your answer is ready.
+            </h1>
+
+            <p>
+                A clear and contextual answer generated
+                by EduGenie.
+            </p>
+
+        {% elif task == "Quiz" or task == "quiz" %}
+
+            <h1>
+                Test your understanding.
+            </h1>
+
+            <p>
+                Answer the questions and submit your quiz
+                to see your score.
+            </p>
+
+        {% elif task == "Summary" or task == "summarize" %}
+
+            <h1>
+                Here's the shorter version.
+            </h1>
+
+            <p>
+                Your content has been condensed into
+                useful and readable key information.
+            </p>
+
+        {% elif task == "Recommend Path" or task == "learn" %}
+
+            <h1>
+                Your learning path is ready.
+            </h1>
+
+            <p>
+                A structured learning journey generated
+                around your topic.
+            </p>
+
+        {% else %}
+
+            <h1>
+                Concept explained simply.
+            </h1>
+
+            <p>
+                A beginner-friendly explanation designed
+                to make the concept easier to understand.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =========================================
+         USER INPUT CARD
+         ========================================= -->
+
+    <section class="result-input-card">
+
+        <div class="result-input-header">
+
+            <div class="result-input-icon">
+                ?
+            </div>
+
+            <div>
+
+                <span>
+                    YOUR INPUT
+                </span>
+
+                <h2>
+                    What you asked EduGenie
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="result-input-text">
+
+            {% if source %}
+                {{ source }}
+
+            {% elif prompt %}
+                {{ prompt }}
+
+            {% else %}
+                Your request
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         ERROR STATE
+         ========================================= -->
+
+    {% if has_error %}
+
+        <section class="result-error-card">
+
+            <div class="result-error-icon">
+                !
+            </div>
+
+            <div class="result-error-content">
+
+                <span class="result-error-label">
+                    TEMPORARY ISSUE
+                </span>
+
+                <h2>
+                    {{ error_title or
+                    "AI service temporarily unavailable" }}
+                </h2>
+
+                <p>
+                    {{ error_message or
+                    "EduGenie could not process your request right now. Please try again in a moment." }}
+                </p>
+
+                <div class="result-error-actions">
+
+                    <button
+                        type="button"
+                        class="result-button result-button-primary"
+                        onclick="retryRequest()"
+                    >
+                        <span>↻</span>
+                        Retry
+                    </button>
+
+                    <a
+                        href="/"
+                        class="result-button result-button-secondary"
+                    >
+                        Back to Workspace
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    {% else %}
+
+
+        <!-- =========================================
+             AI RESPONSE CARD
+             ========================================= -->
+
+        <section class="result-answer-card">
+
+            <!-- RESPONSE HEADER -->
+
+            <div class="answer-top">
+
+                <div class="answer-title-group">
+
+                    <div class="answer-ai-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <span class="answer-label">
+                            AI RESPONSE
+                        </span>
+
+                        <h2>
+
+                            {% if task == "QnA" or task == "qa" %}
+
+                                Direct Answer
+
+                            {% elif task == "Quiz" or task == "quiz" %}
+
+                                Your Quiz
+
+                            {% elif task == "Summary" or task == "summarize" %}
+
+                                Concise Summary
+
+                            {% elif task == "Recommend Path" or task == "learn" %}
+
+                                Recommended Learning Path
+
+                            {% else %}
+
+                                AI Explanation
+
+                            {% endif %}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AI SOURCE STATUS -->
+
+                <div class="answer-status">
+
+                    <span></span>
+
+                    {% if source_type == "local" %}
+                        Local AI
+                    {% else %}
+                        Gemini AI
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- DIVIDER -->
+
+            <div class="answer-line"></div>
+
+
+            <!-- =====================================
+                 QUIZ
+                 ===================================== -->
+
+            {% if is_quiz %}
+
+                <form
+                    id="quizForm"
+                    class="quiz-container"
+                    onsubmit="submitQuiz(event)"
+                >
+
+                    {% for item in content %}
+
+                        {# IMPORTANT:
+                           Save the OUTER question loop index.
+                           The inner option loop has its own loop.index0.
+                        #}
+
+                        {% set question_index = loop.index0 %}
+
+                        <article
+                            class="quiz-question"
+                            data-question-index="{{ question_index }}"
+                            data-correct-values='{{ item.correctValues | tojson }}'
+                        >
+
+                            <div class="quiz-question-number">
+                                Question {{ loop.index }} of {{ content|length }}
+                            </div>
+
+
+                            <h3>
+                                {{ item.question }}
+                            </h3>
+
+
+                            <div class="quiz-options">
+
+                                {% for option in item.options %}
+
+                                    <label class="quiz-option">
+
+                                        <input
+                                            type="radio"
+                                            name="question_{{ question_index }}"
+                                            value="{{ option.value }}"
+                                        >
+
+                                        <span class="quiz-option-letter">
+                                            {{ "ABCD"[loop.index0] }}
+                                        </span>
+
+                                        <span class="quiz-option-text">
+                                            {{ option.label }}
+                                        </span>
+
+                                    </label>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- RESULT MESSAGE FOR THIS QUESTION -->
+
+                            <div
+                                class="quiz-question-result"
+                                id="question-result-{{ question_index }}"
+                                style="display: none;"
+                            ></div>
+
+                        </article>
+
+                    {% endfor %}
+
+
+                    <!-- =====================================
+                         SUBMIT AREA
+                         ===================================== -->
+
+                    <div class="quiz-submit-area">
+
+                        <div class="quiz-progress-text">
+                            <span id="answeredCount">0</span>
+                            / {{ content|length }} answered
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="result-button result-button-primary quiz-submit-button"
+                            id="submitQuizButton"
+                        >
+                            <span>✓</span>
+                            Submit Quiz
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <!-- =====================================
+                     QUIZ SCORE
+                     ===================================== -->
+
+                <section
+                    id="quizResult"
+                    class="quiz-result-card"
+                    style="display: none;"
+                >
+
+                    <div class="quiz-score-icon">
+                        ✓
+                    </div>
+
+                    <div class="quiz-score-content">
+
+                        <span class="answer-label">
+                            QUIZ COMPLETED
+                        </span>
+
+                        <h2 id="quizScore">
+                            Score: 0 / 0
+                        </h2>
+
+                        <p id="quizPercentage">
+                            0%
+                        </p>
+
+                        <div
+                            class="quiz-result-message"
+                            id="quizMessage"
+                        >
+                            Keep practicing and build your understanding.
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            {% else %}
+
+
+                <!-- =====================================
+                     NORMAL AI RESPONSE
+                     ===================================== -->
+
+                <article
+                    class="answer-content"
+                    id="answerContent"
+                >
+                    {{ content | safe }}
+                </article>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 LEARNING TIP
+                 ========================================= -->
+
+            <div class="learning-tip">
+
+                <div class="learning-tip-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        Learning Tip
+                    </strong>
+
+                    <p>
+
+                        {% if task == "Quiz" or task == "quiz" %}
+
+                            Try answering the questions yourself
+                            before reviewing your mistakes.
+
+                        {% elif task == "Summary" or task == "summarize" %}
+
+                            Read the key points once, then explain
+                            the main idea in your own words.
+
+                        {% elif task == "Recommend Path" or task == "learn" %}
+
+                            Follow the learning order and build
+                            your understanding step by step.
+
+                        {% else %}
+
+                            Read the response once, then try
+                            explaining the concept in your own words.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             RESULT ACTIONS
+             ========================================= -->
+
+        <section class="result-actions">
+
+            {% if not is_quiz %}
+
+                <button
+                    type="button"
+                    class="result-button result-button-primary"
+                    id="copyButton"
+                    onclick="copyResult()"
+                >
+                    <span>
+                        ⧉
+                    </span>
+                    Copy Response
+                </button>
+
+            {% endif %}
+
+
+            <a
+                href="/#workspace"
+                class="result-button result-button-secondary"
+            >
+                <span>
+                    ↗
+                </span>
+                Ask Something Else
+            </a>
+
+
+            <a
+                href="/"
+                class="result-button result-button-secondary"
+            >
+                <span>
+                    ＋
+                </span>
+                New Learning Task
+            </a>
+
+        </section>
+
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+    /* =========================================
+       COPY AI RESPONSE
+       ========================================= */
+
+    async function copyResult() {
+
+        const content =
+            document.getElementById("answerContent");
+
+        const button =
+            document.getElementById("copyButton");
+
+        if (!content || !button) {
+            return;
+        }
+
+        const text =
+            content.innerText.trim();
+
+        if (!text) {
+            return;
+        }
+
+        try {
+
+            await navigator.clipboard.writeText(text);
+
+            button.innerHTML =
+                "<span>✓</span> Copied";
+
+            setTimeout(function () {
+
+                button.innerHTML =
+                    "<span>⧉</span> Copy Response";
+
+            }, 1800);
+
+        } catch (error) {
+
+            console.error(
+                "Copy failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       RETRY REQUEST
+       ========================================= */
+
+    function retryRequest() {
+
+        window.location.reload();
+
+    }
+
+
+    /* =========================================
+       QUIZ FUNCTIONALITY
+       ========================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const quizForm =
+                document.getElementById("quizForm");
+
+            if (!quizForm) {
+                return;
+            }
+
+
+            const answeredCount =
+                document.getElementById(
+                    "answeredCount"
+                );
+
+
+            const questionCards =
+                document.querySelectorAll(
+                    ".quiz-question"
+                );
+
+
+            /* -------------------------------------
+               UPDATE ANSWER COUNT
+               ------------------------------------- */
+
+            function updateAnsweredCount() {
+
+                let answered = 0;
+
+                questionCards.forEach(
+                    function (card) {
+
+                        const selected =
+                            card.querySelector(
+                                "input[type='radio']:checked"
+                            );
+
+                        if (selected) {
+                            answered++;
+                        }
+
+                    }
+                );
+
+                if (answeredCount) {
+
+                    answeredCount.textContent =
+                        answered;
+
+                }
+
+            }
+
+
+            /* -------------------------------------
+               WATCH RADIO BUTTONS
+               ------------------------------------- */
+
+            quizForm
+                .querySelectorAll(
+                    "input[type='radio']"
+                )
+                .forEach(
+                    function (radio) {
+
+                        radio.addEventListener(
+                            "change",
+                            updateAnsweredCount
+                        );
+
+                    }
+                );
+
+
+            updateAnsweredCount();
+
+        }
+    );
+
+
+    /* =========================================
+       SUBMIT QUIZ
+       ========================================= */
+
+    function submitQuiz(event) {
+
+        event.preventDefault();
+
+
+        const questionCards =
+            document.querySelectorAll(
+                ".quiz-question"
+            );
+
+
+        const quizResult =
+            document.getElementById(
+                "quizResult"
+            );
+
+
+        const quizScore =
+            document.getElementById(
+                "quizScore"
+            );
+
+
+        const quizPercentage =
+            document.getElementById(
+                "quizPercentage"
+            );
+
+
+        const quizMessage =
+            document.getElementById(
+                "quizMessage"
+            );
+
+
+        const submitButton =
+            document.getElementById(
+                "submitQuizButton"
+            );
+
+
+        let score = 0;
+
+        let unanswered = 0;
+
+
+        /* -------------------------------------
+           CHECK EVERY QUESTION
+           ------------------------------------- */
+
+        questionCards.forEach(
+            function (card, index) {
+
+                const selected =
+                    card.querySelector(
+                        "input[type='radio']:checked"
+                    );
+
+
+                const resultBox =
+                    document.getElementById(
+                        "question-result-" + index
+                    );
+
+
+                let correctValues = [];
+
+
+                try {
+
+                    correctValues =
+                        JSON.parse(
+                            card.dataset.correctValues || "[]"
+                        );
+
+                } catch (error) {
+
+                    correctValues = [];
+
+                }
+
+
+                correctValues =
+                    correctValues.map(
+                        function (value) {
+
+                            return String(value)
+                                .trim()
+                                .toLowerCase();
+
+                        }
+                    );
+
+
+                /* ---------------------------------
+                   REMOVE OLD CLASSES
+                   --------------------------------- */
+
+                card.classList.remove(
+                    "quiz-question-correct",
+                    "quiz-question-wrong",
+                    "quiz-question-unanswered"
+                );
+
+
+                card.querySelectorAll(
+                    ".quiz-option"
+                ).forEach(
+                    function (option) {
+
+                        option.classList.remove(
+                            "correct",
+                            "wrong",
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                /* ---------------------------------
+                   UNANSWERED
+                   --------------------------------- */
+
+                if (!selected) {
+
+                    unanswered++;
+
+                    card.classList.add(
+                        "quiz-question-unanswered"
+                    );
+
+
+                    if (resultBox) {
+
+                        resultBox.style.display =
+                            "block";
+
+                        resultBox.innerHTML =
+                            "<strong>Not answered.</strong> Please review this question.";
+
+                    }
+
+                    return;
+
+                }
+
+
+                /* ---------------------------------
+                   SELECTED OPTION
+                   --------------------------------- */
+
+                const selectedValue =
+                    String(
+                        selected.value
+                    )
+                    .trim()
+                    .toLowerCase();
+
+
+                const selectedLabel =
+                    selected.closest(
+                        ".quiz-option"
+                    );
+
+
+                if (selectedLabel) {
+
+                    selectedLabel.classList.add(
+                        "selected"
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   CORRECT / WRONG
+                   --------------------------------- */
+
+                if (
+                    correctValues.includes(
+                        selectedValue
+                    )
+                ) {
+
+                    score++;
+
+                    card.classList.add(
+                        "quiz-question-correct"
+                    );
+
+
+                    if (selectedLabel) {
+
+                        selectedLabel.classList.add(
+                            "correct"
+                        );
+
+                    }
+
+
+                    if (resultBox) {
+
+                        resultBox.style.display =
+                            "block";
+
+                        resultBox.innerHTML =
+                            "<strong>✓ Correct!</strong> Nice work.";
+
+                    }
+
+                } else {
+
+                    card.classList.add(
+                        "quiz-question-wrong"
+                    );
+
+
+                    if (selectedLabel) {
+
+                        selectedLabel.classList.add(
+                            "wrong"
+                        );
+
+                    }
+
+
+                    /* -----------------------------
+                       HIGHLIGHT CORRECT ANSWER
+                       ----------------------------- */
+
+                    card.querySelectorAll(
+                        ".quiz-option"
+                    ).forEach(
+                        function (option) {
+
+                            const input =
+                                option.querySelector(
+                                    "input"
+                                );
+
+                            if (!input) {
+                                return;
+                            }
+
+
+                            const optionValue =
+                                String(
+                                    input.value
+                                )
+                                .trim()
+                                .toLowerCase();
+
+
+                            if (
+                                correctValues.includes(
+                                    optionValue
+                                )
+                            ) {
+
+                                option.classList.add(
+                                    "correct"
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    if (resultBox) {
+
+                        resultBox.style.display =
+                            "block";
+
+                        resultBox.innerHTML =
+                            "<strong>✗ Incorrect.</strong> The correct answer is highlighted.";
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        /* -------------------------------------
+           CALCULATE SCORE
+           ------------------------------------- */
+
+        const total =
+            questionCards.length;
+
+
+        const percentage =
+            total > 0
+                ? Math.round(
+                    (score / total) * 100
+                )
+                : 0;
+
+
+        /* -------------------------------------
+           SHOW SCORE
+           ------------------------------------- */
+
+        if (quizScore) {
+
+            quizScore.textContent =
+                "Score: " +
+                score +
+                " / " +
+                total;
+
+        }
+
+
+        if (quizPercentage) {
+
+            quizPercentage.textContent =
+                percentage + "%";
+
+        }
+
+
+        /* -------------------------------------
+           RESULT MESSAGE
+           ------------------------------------- */
+
+        let message =
+            "Keep practicing and build your understanding.";
+
+
+        if (percentage === 100) {
+
+            message =
+                "Excellent! You answered every question correctly.";
+
+        } else if (percentage >= 80) {
+
+            message =
+                "Great work! You have a strong understanding of the topic.";
+
+        } else if (percentage >= 60) {
+
+            message =
+                "Good attempt! Review the questions you missed.";
+
+        } else if (percentage >= 40) {
+
+            message =
+                "You are getting there. Review the topic and try again.";
+
+        } else {
+
+            message =
+                "Keep learning. Review the concepts and try the quiz again.";
+
+        }
+
+
+        if (unanswered > 0) {
+
+            message +=
+                " " +
+                unanswered +
+                " question" +
+                (
+                    unanswered === 1
+                        ? " was"
+                        : "s were"
+                ) +
+                " left unanswered.";
+
+        }
+
+
+        if (quizMessage) {
+
+            quizMessage.textContent =
+                message;
+
+        }
+
+
+        /* -------------------------------------
+           SHOW RESULT CARD
+           ------------------------------------- */
+
+        if (quizResult) {
+
+            quizResult.style.display =
+                "flex";
+
+
+            quizResult.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }
+
+
+        /* -------------------------------------
+           LOCK QUIZ AFTER SUBMISSION
+           ------------------------------------- */
+
+        questionCards.forEach(
+            function (card) {
+
+                card.querySelectorAll(
+                    "input[type='radio']"
+                ).forEach(
+                    function (radio) {
+
+                        radio.disabled = true;
+
+                    }
+                );
+
+            }
+        );
+
+
+        if (submitButton) {
+
+            submitButton.disabled = true;
+
+            submitButton.innerHTML =
+                "<span>✓</span> Quiz Submitted";
+
+        }
+
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,869 @@
+{% extends "base.html" %}
+
+{% block title %}
+EduGenie | Learning Workspace
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================
+     HERO / WORKSPACE
+     ========================================= -->
+
+<section
+    class="hero-section"
+    id="workspace"
+>
+
+    <div class="hero-content">
+
+        <!-- Badge -->
+        <div class="hero-badge">
+
+            <span class="hero-badge-icon">
+                ✦
+            </span>
+
+            <span>
+                AI-powered learning, simplified
+            </span>
+
+        </div>
+
+
+        <!-- Heading -->
+        <h1 class="hero-title">
+
+            Learn smarter.
+            <span>Understand deeper.</span>
+
+        </h1>
+
+
+        <!-- Description -->
+        <p class="hero-description">
+
+            Ask questions, simplify difficult concepts,
+            generate quizzes, summarize content, and build
+            personalized learning paths with EduGenie.
+
+        </p>
+
+
+        <!-- =========================================
+             WORKSPACE CARD
+             ========================================= -->
+
+        <div class="workspace-card">
+
+            <!-- Workspace Header -->
+            <div class="workspace-header">
+
+                <div class="workspace-heading">
+
+                    <div class="workspace-status-icon">
+                        <span></span>
+                    </div>
+
+                    <div>
+
+                        <span class="workspace-eyebrow">
+                            AI WORKSPACE
+                        </span>
+
+                        <h2>
+                            What would you like to learn?
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workspace-chip">
+                    <span>✦</span>
+                    Smart Learning
+                </div>
+
+            </div>
+
+
+            <!-- Form -->
+            <form
+                id="eduForm"
+                method="post"
+                action="/qa"
+            >
+
+                <!-- Prompt -->
+                <div class="prompt-wrapper">
+
+                    <textarea
+                        id="promptInput"
+                        name="text"
+                        rows="5"
+                        placeholder="Ask a question, enter a concept, paste text, or describe what you want to learn..."
+                        autocomplete="off"
+                        required
+                    ></textarea>
+
+
+                    <div class="prompt-footer">
+
+                        <div class="prompt-helper">
+
+                            <span class="helper-icon">
+                                ✦
+                            </span>
+
+                            <span>
+                                EduGenie will adapt the response to your selected tool.
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="character-count"
+                            id="characterCount"
+                        >
+                            0 characters
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     SEGMENTED TOOL SELECTOR
+                     ========================================= -->
+
+                <div class="tool-selector">
+
+                    <div class="tool-selector-heading">
+
+                        <span>
+                            Choose a learning tool
+                        </span>
+
+                        <small>
+                            Select how EduGenie should help
+                        </small>
+
+                    </div>
+
+
+                    <div class="tool-pills">
+
+                        <!-- Ask AI -->
+                        <label class="tool-pill active">
+
+                            <input
+                                type="radio"
+                                name="task"
+                                value="qa"
+                                checked
+                            >
+
+                            <span class="pill-icon">
+                                ?
+                            </span>
+
+                            <span class="pill-content">
+
+                                <strong>
+                                    Ask AI
+                                </strong>
+
+                                <small>
+                                    Get answers
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- Explain -->
+                        <label class="tool-pill">
+
+                            <input
+                                type="radio"
+                                name="task"
+                                value="explain"
+                            >
+
+                            <span class="pill-icon">
+                                ✦
+                            </span>
+
+                            <span class="pill-content">
+
+                                <strong>
+                                    Explain
+                                </strong>
+
+                                <small>
+                                    Simplify concepts
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- Quiz -->
+                        <label class="tool-pill">
+
+                            <input
+                                type="radio"
+                                name="task"
+                                value="quiz"
+                            >
+
+                            <span class="pill-icon">
+                                ✓
+                            </span>
+
+                            <span class="pill-content">
+
+                                <strong>
+                                    Quiz
+                                </strong>
+
+                                <small>
+                                    Test yourself
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- Summary -->
+                        <label class="tool-pill">
+
+                            <input
+                                type="radio"
+                                name="task"
+                                value="summarize"
+                            >
+
+                            <span class="pill-icon">
+                                ≡
+                            </span>
+
+                            <span class="pill-content">
+
+                                <strong>
+                                    Summary
+                                </strong>
+
+                                <small>
+                                    Condense content
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- Learning Path -->
+                        <label class="tool-pill">
+
+                            <input
+                                type="radio"
+                                name="task"
+                                value="learn"
+                            >
+
+                            <span class="pill-icon">
+                                ↗
+                            </span>
+
+                            <span class="pill-content">
+
+                                <strong>
+                                    Learning Path
+                                </strong>
+
+                                <small>
+                                    Plan your journey
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Generate Button -->
+                <div class="generate-area">
+
+                    <div class="generate-note">
+
+                        <span>●</span>
+
+                        Powered by EduGenie AI
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="generate-button"
+                    >
+
+                        <span>
+                            Generate Magic
+                        </span>
+
+                        <span class="generate-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     FEATURES
+     ========================================= -->
+
+<section
+    class="features-section"
+    id="features"
+>
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="section-eyebrow">
+                YOUR LEARNING TOOLKIT
+            </span>
+
+            <h2>
+                Five ways to
+                <span>learn better.</span>
+            </h2>
+
+        </div>
+
+
+        <p>
+
+            Intelligent tools designed to turn
+            complicated information into something
+            you can actually understand.
+
+        </p>
+
+    </div>
+
+
+    <!-- Feature Grid -->
+    <div class="feature-grid">
+
+
+        <!-- =========================================
+             ASK AI
+             ========================================= -->
+
+        <article class="feature-card">
+
+            <div class="feature-top">
+
+                <div class="feature-icon icon-purple">
+                    ?
+                </div>
+
+                <span class="feature-number">
+                    01
+                </span>
+
+            </div>
+
+
+            <div class="feature-body">
+
+                <h3>
+                    Ask AI
+                </h3>
+
+                <p>
+                    Ask academic or general questions and
+                    receive clear, contextual answers powered
+                    by AI.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="feature-action"
+                data-task="qa"
+            >
+
+                Start asking
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </article>
+
+
+
+        <!-- =========================================
+             EXPLAIN
+             ========================================= -->
+
+        <article class="feature-card">
+
+            <div class="feature-top">
+
+                <div class="feature-icon icon-blue">
+                    ✦
+                </div>
+
+                <span class="feature-number">
+                    02
+                </span>
+
+            </div>
+
+
+            <div class="feature-body">
+
+                <h3>
+                    Explain
+                </h3>
+
+                <p>
+                    Turn difficult concepts into simple,
+                    beginner-friendly explanations that
+                    are easier to remember.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="feature-action"
+                data-task="explain"
+            >
+
+                Simplify a concept
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </article>
+
+
+
+        <!-- =========================================
+             QUIZ
+             ========================================= -->
+
+        <article class="feature-card">
+
+            <div class="feature-top">
+
+                <div class="feature-icon icon-pink">
+                    ✓
+                </div>
+
+                <span class="feature-number">
+                    03
+                </span>
+
+            </div>
+
+
+            <div class="feature-body">
+
+                <h3>
+                    Quiz
+                </h3>
+
+                <p>
+                    Generate multiple-choice questions
+                    and test how well you understand
+                    a topic.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="feature-action"
+                data-task="quiz"
+            >
+
+                Take a quiz
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </article>
+
+
+
+        <!-- =========================================
+             SUMMARY
+             ========================================= -->
+
+        <article class="feature-card">
+
+            <div class="feature-top">
+
+                <div class="feature-icon icon-orange">
+                    ≡
+                </div>
+
+                <span class="feature-number">
+                    04
+                </span>
+
+            </div>
+
+
+            <div class="feature-body">
+
+                <h3>
+                    Summary
+                </h3>
+
+                <p>
+                    Transform lengthy educational content
+                    into concise and useful key points.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="feature-action"
+                data-task="summarize"
+            >
+
+                Summarize content
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </article>
+
+
+
+        <!-- =========================================
+             LEARNING PATH
+             ========================================= -->
+
+        <article class="feature-card feature-card-wide">
+
+            <div class="feature-top">
+
+                <div class="feature-icon icon-green">
+                    ↗
+                </div>
+
+                <span class="feature-number">
+                    05
+                </span>
+
+            </div>
+
+
+            <div class="feature-body">
+
+                <h3>
+                    Learning Path
+                </h3>
+
+                <p>
+                    Get a structured journey from beginner
+                    fundamentals to practical advanced
+                    learning.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="feature-action"
+                data-task="learn"
+            >
+
+                Build my learning path
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     ABOUT
+     ========================================= -->
+
+<section
+    class="about-section"
+    id="about"
+>
+
+    <div class="about-card">
+
+        <div class="about-icon">
+            ✦
+        </div>
+
+
+        <div class="about-content">
+
+            <span class="section-eyebrow">
+                ABOUT EDUGENIE
+            </span>
+
+            <h2>
+                Learning doesn't have to
+                feel complicated.
+            </h2>
+
+            <p>
+                EduGenie combines AI-powered assistance
+                with practical learning tools to help
+                students understand, practice, summarize,
+                and organize knowledge.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("eduForm");
+    const promptInput = document.getElementById("promptInput");
+    const characterCount = document.getElementById("characterCount");
+
+    const toolPills = document.querySelectorAll(".tool-pill");
+    const featureActions = document.querySelectorAll(".feature-action");
+    const workspace = document.getElementById("workspace");
+
+
+    /* =========================================
+       UPDATE CHARACTER COUNT
+       ========================================= */
+
+    function updateCharacterCount() {
+
+        if (!promptInput || !characterCount) {
+            return;
+        }
+
+        const length = promptInput.value.length;
+
+        characterCount.textContent =
+            `${length} character${length === 1 ? "" : "s"}`;
+    }
+
+
+    if (promptInput) {
+
+        promptInput.addEventListener(
+            "input",
+            updateCharacterCount
+        );
+
+        updateCharacterCount();
+    }
+
+
+    /* =========================================
+       TOOL PILL SELECTION
+       ========================================= */
+
+    toolPills.forEach(function (pill) {
+
+        pill.addEventListener("click", function () {
+
+            toolPills.forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+            pill.classList.add("active");
+
+            const radio = pill.querySelector(
+                'input[type="radio"]'
+            );
+
+            if (radio) {
+                radio.checked = true;
+            }
+
+        });
+
+    });
+
+
+    /* =========================================
+       FEATURE CARD → WORKSPACE
+       ========================================= */
+
+    featureActions.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const task = button.dataset.task;
+
+            const radio = document.querySelector(
+                `input[name="task"][value="${task}"]`
+            );
+
+            if (radio) {
+
+                radio.checked = true;
+
+                toolPills.forEach(function (pill) {
+                    pill.classList.remove("active");
+                });
+
+                const parent = radio.closest(".tool-pill");
+
+                if (parent) {
+                    parent.classList.add("active");
+                }
+            }
+
+
+            if (workspace) {
+
+                workspace.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+            }
+
+
+            setTimeout(function () {
+
+                if (promptInput) {
+                    promptInput.focus();
+                }
+
+            }, 500);
+
+        });
+
+    });
+
+
+    /* =========================================
+       FORM ROUTING
+       ========================================= */
+
+    if (form) {
+
+        form.addEventListener("submit", function (event) {
+
+            const selectedRadio =
+                document.querySelector(
+                    'input[name="task"]:checked'
+                );
+
+            if (!selectedRadio) {
+                event.preventDefault();
+                return;
+            }
+
+            const selectedTask = selectedRadio.value;
+
+
+            const routes = {
+                qa: "/qa",
+                explain: "/explain",
+                quiz: "/quiz",
+                summarize: "/summarize",
+                learn: "/learn/recommendations"
+            };
+
+
+            /* Set correct FastAPI endpoint */
+
+            form.action = routes[selectedTask];
+
+
+            /* Set correct form field name */
+
+            if (selectedTask === "explain") {
+
+                promptInput.name = "topic";
+
+            } else {
+
+                promptInput.name = "text";
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}EduGenie | Learning Workspace{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='style.css') }}"
+    >
+
+    <!-- Prevent theme flash -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("edugenie-theme");
+
+            if (savedTheme === "light") {
+                document.documentElement.classList.remove("dark");
+            } else {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
+</head>
+
+<body>
+
+    <!-- Background Mesh -->
+    <div class="site-background" aria-hidden="true">
+        <div class="mesh mesh-one"></div>
+        <div class="mesh mesh-two"></div>
+        <div class="mesh mesh-three"></div>
+    </div>
+
+
+    <!-- =========================================
+         NAVBAR
+         ========================================= -->
+
+    <header class="navbar">
+
+        <div class="navbar-inner">
+
+            <!-- Brand -->
+            <a href="/" class="brand">
+
+                <div class="brand-mark">
+                    <span>✦</span>
+                </div>
+
+                <div class="brand-copy">
+                    <strong>EduGenie</strong>
+                    <span>Learning Workspace</span>
+                </div>
+
+            </a>
+
+
+            <!-- Navigation -->
+            <nav class="nav-links" aria-label="Main navigation">
+
+                <a href="/#workspace" class="nav-link">
+                    Workspace
+                </a>
+
+                <a href="/#features" class="nav-link">
+                    Features
+                </a>
+
+                <a href="/#about" class="nav-link">
+                    About
+                </a>
+
+            </nav>
+
+
+            <!-- Right Controls -->
+            <div class="navbar-actions">
+
+                <div class="ai-ready">
+
+                    <span class="ready-dot"></span>
+
+                    <span>AI Ready</span>
+
+                </div>
+
+
+                <button
+                    class="theme-toggle"
+                    id="themeToggle"
+                    type="button"
+                    aria-label="Switch theme"
+                    title="Switch theme"
+                >
+
+                    <span
+                        class="theme-icon"
+                        id="themeIcon"
+                    >
+                        ☀
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="page-container">
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+
+    <!-- =========================================
+         FOOTER
+         ========================================= -->
+
+    <footer class="footer">
+
+        <div class="footer-inner">
+
+            <div class="footer-brand">
+
+                <div class="footer-brand-name">
+                    <span>✦</span>
+                    EduGenie
+                </div>
+
+                <span class="footer-subtitle">
+                    Learning Workspace
+                </span>
+
+            </div>
+
+
+            <p>
+                Google Gemini Powered Learning Assistant
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    {% block scripts %}{% endblock %}
+
+
+    <!-- =========================================
+         THEME SCRIPT
+         ========================================= -->
+
+    <script>
+
+        (function () {
+
+            const root =
+                document.documentElement;
+
+            const themeToggle =
+                document.getElementById("themeToggle");
+
+            const themeIcon =
+                document.getElementById("themeIcon");
+
+
+            function updateThemeIcon() {
+
+                const isDark =
+                    root.classList.contains("dark");
+
+                if (themeIcon) {
+
+                    themeIcon.textContent =
+                        isDark ? "☀" : "☾";
+
+                }
+
+            }
+
+
+            function applyTheme(theme) {
+
+                if (theme === "dark") {
+
+                    root.classList.add("dark");
+
+                } else {
+
+                    root.classList.remove("dark");
+
+                }
+
+                localStorage.setItem(
+                    "edugenie-theme",
+                    theme
+                );
+
+                updateThemeIcon();
+
+            }
+
+
+            const savedTheme =
+                localStorage.getItem("edugenie-theme");
+
+
+            if (savedTheme === "light") {
+
+                applyTheme("light");
+
+            } else {
+
+                applyTheme("dark");
+
+            }
+
+
+            if (themeToggle) {
+
+                themeToggle.addEventListener(
+                    "click",
+                    function () {
+
+                        const isDark =
+                            root.classList.contains("dark");
+
+                        applyTheme(
+                            isDark
+                                ? "light"
+                                : "dark"
+                        );
+
+                    }
+                );
+
+            }
+
+        })();
+
+    </script>
+
+</body>
+
+</html>

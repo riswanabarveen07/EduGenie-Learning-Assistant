@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+google-genai
+python-dotenv
+markdown
+transformers==4.49.0
+torch==2.14.0
+sentencepiece==0.2.2
